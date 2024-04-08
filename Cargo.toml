@@ -1,0 +1,65 @@
+[package]
+name = "zero2prod"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+path = "src/lib.rs"
+
+# Notice the doublesquarebrackets: it'san arrayinTOML's syntax.
+# We can only have one libraryin aproject,but wecan havemultiplebinaries!
+# If you want tomanage multiplelibraries inthesame repository
+# havea look atthe workspacefeature-we'llcover itlater on.
+[[bin]]
+path = "src/main.rs"
+name = "zero2prod"
+
+
+[dependencies]
+config = "0.14.0"
+actix-web = "4.5.1"
+expand = "0.3.0"
+tokio = {  version = "1.37.0", features = ["macros", "rt-multi-thread"] }
+serde = {version = "1",features = ["derive"]}
+uuid = { version = "1", features = ["v4"]}
+chrono = { version = "0.4.22", default-features = false, features = ["clock"]}
+tracing = { version = "0.1", features = ["log"] }
+tracing-subscriber = { version = "0.3", features = ["registry", "env-filter"] }
+tracing-bunyan-formatter = "0.3.9"
+tracing-log = "0.2.0"
+tracing-actix-web = "0.7.10"
+secrecy = { version = "0.8.0", features = ["serde"]}
+serde-aux = "4.5.0"
+unicode-segmentation = "1.11.0"
+validator = "0.16.0"
+reqwest = { version="0.12.3", features = ["json", "rustls-tls"] }
+
+# Using table-like toml syntax to avoid a super-long line!
+[dependencies.sqlx]
+version = "0.7.4"
+default-features = false
+features = [
+    "runtime-tokio-rustls",
+    "macros",
+    "postgres",
+    "uuid",
+    "chrono",
+    "migrate"
+]
+
+# On Windows
+# ```
+# cargoinstall-f cargo-binutils
+# rustup component add llvm-tools-preview
+# ```
+[target.x86_64-pc-windows-msvc]
+rustflags = ["-C", "link-arg=-fuse-ld=lld"]
+[target.x86_64-pc-windows-gnu]
+rustflags = ["-C", "link-arg=-fuse-ld=lld"]
+
+[dev-dependencies]
+once_cell = "1.19.0"
+
+claims = "0.7"
